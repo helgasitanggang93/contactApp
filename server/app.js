@@ -27,3 +27,6 @@ app.use((err, req, res, next)=>{
   let errorDetail = errHandler(err)
   res.status(errorDetail.status).json(errorDetail.message)
 })
+app.listen(port, function(){
+  console.log(`Listening to Port ${port}`);
+})
