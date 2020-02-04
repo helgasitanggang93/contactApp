@@ -5,7 +5,7 @@ const cors = require('cors');
 const port = process.env.PORT || 3001;
 const contactRoutes = require('./routes');
 const mongoose = require('mongoose');
-const uri = `mongodb://localhost:27017/contact-app`;
+const uri = `mongodb://localhost:27017/contact-app` + process.env.NODE_ENV
 const errHandler = require('./helpers/errhandler')
 
 mongoose.set('useNewUrlParser', true);
@@ -30,3 +30,5 @@ app.use((err, req, res, next)=>{
 app.listen(port, function(){
   console.log(`Listening to Port ${port}`);
 })
+
+module.exports = app;
