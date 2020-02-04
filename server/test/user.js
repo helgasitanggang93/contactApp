@@ -27,7 +27,7 @@ describe('users crud', ()=> {
       })
     })
 
-    it('receive object with status 201 and input email lowercase', done => {
+    it('receive object with status 201 and input email uppercase', done => {
       chai.request(app)
       .post('/api/users/signup')
       .send({email: 'MARIA@MAIL.COM', password: 'naruto'})
@@ -91,9 +91,81 @@ describe('users crud', ()=> {
         done()
       })
     })
+    it('Error Message for empty Password', done => {
+      chai.request(app)
+      .post('/api/users/signup')
+      .send({email: 'markonah@mail.com'})
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res).to.have.property('text')
+        expect(res).to.have.property('statusCode')
+        expect(res.statusCode).to.equal(400)
+        expect(res.text).to.equal('"User validation failed: password: Password must be required"')
+        done()
+      })
+    })
   })
   describe('POST api/users/login Success Test Case', () => {
-    
+    before(()=>{
+      createUser({email: 'mariono@mail.com',
+      password: 'naruto'})
+    })
+    after(() => {
+      deleteAllUser()
+    })
+    it('receive object with status 201', done=> {
+      chai.request(app)
+      .post('/api/users/login')
+      .send({email:'mariono@mail.com', password: 'naruto'})
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res).to.have.property('token')
+        expect(res.body.token).to.be.a('string')
+        done()
+      })
+    })  
+    it('receive object with status 201 and input email uppercase', done=> {
+      chai.request(app)
+      .post('/api/users/login')
+      .send({email:'MARIONO@MAIL.COM', password: 'naruto'})
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res).to.have.property('token')
+        expect(res.body.token).to.be.a('string')
+        done()
+      })
+    })  
+  })
+  describe('POST api/users/login Error Test Case', () => {
+    before(()=>{
+      createUser({email: 'mariono@mail.com',
+      password: 'naruto'})
+    })
+    after(() => {
+      deleteAllUser()
+    })
+    it('Error message wrong email', ()=> {
+      chai.request(app)
+      .post('/api/users/login')
+      .send({email: 'user@mail.com', password: 'naruto'})
+      .end((err, res) => {
+        expect(res).to.have.status(401)
+        expect(res).to.have.property('text')
+        expect(res.text).to.equal('"message: wrong email/password"')
+      })
+    })
+    it('Error message wrong Password', ()=> {
+      chai.request(app)
+      .post('/api/users/login')
+      .send({email: 'mariono@mail.com', password: '1234'})
+      .end((err, res) => {
+        expect(res).to.have.status(401)
+        expect(res).to.have.property('text')
+        expect(res.text).to.equal('"message: wrong email/password"')
+      })
+    })
   })
 })
 
