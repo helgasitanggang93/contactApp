@@ -120,7 +120,7 @@ describe('users crud', ()=> {
       .end((err, res) => {
         expect(err).to.be.null
         expect(res).to.have.status(200)
-        expect(res).to.have.property('token')
+        expect(res.body).to.have.property('token')
         expect(res.body.token).to.be.a('string')
         done()
       })
@@ -132,7 +132,7 @@ describe('users crud', ()=> {
       .end((err, res) => {
         expect(err).to.be.null
         expect(res).to.have.status(200)
-        expect(res).to.have.property('token')
+        expect(res.body).to.have.property('token')
         expect(res.body.token).to.be.a('string')
         done()
       })
@@ -146,14 +146,15 @@ describe('users crud', ()=> {
     after(() => {
       deleteAllUser()
     })
-    it('Error message wrong email', ()=> {
+    it('Error message wrong email', done => {
       chai.request(app)
       .post('/api/users/login')
       .send({email: 'user@mail.com', password: 'naruto'})
       .end((err, res) => {
         expect(res).to.have.status(401)
         expect(res).to.have.property('text')
-        expect(res.text).to.equal('"message: wrong email/password"')
+        expect(res.text).to.equal('"wrong email/password"')
+        done()
       })
     })
     it('Error message wrong Password', ()=> {
@@ -163,7 +164,8 @@ describe('users crud', ()=> {
       .end((err, res) => {
         expect(res).to.have.status(401)
         expect(res).to.have.property('text')
-        expect(res.text).to.equal('"message: wrong email/password"')
+        expect(res.text).to.equal('"wrong email/password"')
+        done()
       })
     })
   })
