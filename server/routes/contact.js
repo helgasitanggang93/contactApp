@@ -7,4 +7,5 @@ router.post('/', authenticationContact, ContactController.create);
 router.get('/', authenticationContact, ContactController.readAll);
 router.get('/:id', authenticationCommon, ContactController.readOne);
 router.patch('/:id', authenticationCommon, authorization, ContactController.update);
+
 module.exports = router
