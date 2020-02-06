@@ -312,8 +312,6 @@ describe('GET /api/Contacts, read contact Success and Fail' ,() => {
       expect(err).to.be.null
       expect(res.body).to.be.an('object')
       expect(res.status).to.equal(201)
-
-      contactId = (res.body._id)
       done()
     })
   })
@@ -326,6 +324,75 @@ describe('GET /api/Contacts, read contact Success and Fail' ,() => {
       expect(res.status).to.equal(200)
       expect(res.body).to.be.an('array')
       expect(res.body.length).to.equal(2)
+      done()
+    })
+  })
+
+  it('Error Read All Contacts, request without token', done => {
+    chai.request(app)
+    .get('/api/contacts')
+    .end((err, res) =>{
+      expect(res.status).to.equal(401)
+      expect(res).to.have.property('text')
+      expect(res.body).to.equal("Not Authentication")
+      done()
+    })
+  })
+})
+
+describe('GET api/Contacts/:id, readOne Contact success and fail', () => {
+  before(function () {
+    deleteAllContact()
+  })
+  after(function () {
+    deleteAllUser()
+   
+  })
+
+  it('Create User before Create Contact', done => {
+    chai.request(app)
+    .post('/api/users/signup')
+    .send({email: 'user@mail.com', password: 'naruto'})
+    .end((err, res) => {
+      expect(err).to.be.null
+      expect(res).to.have.status(201)
+      expect(res).to.be.an('object')
+      expect(res.body).to.have.property('email')
+      expect(res.body.email).to.equal('user@mail.com')
+      done()
+    })
+  })
+
+  it('Login User and receive Token before Create Contact', done => {
+    chai.request(app)
+    .post('/api/users/login')
+    .send({email:'user@mail.com', password: 'naruto'})
+    .end((err, res)=> {
+      expect(err).to.be.null
+      expect(res).to.have.status(200)
+      expect(res.body).to.be.an('object')
+      expect(res.body).to.have.property('token')
+      expect(res.body.token).to.be.a('string')
+
+      token = (res.body.token)
+      done()
+    })
+  })
+
+  it('Create Second Contact before Read One Data', done => {
+    chai.request(app)
+    .post('/api/contacts')
+    .set('token', token)
+    .send({
+      fullName:'jumirah',
+      address: 'jl. nangka no.32',
+      phoneNumber:'+627755345',
+    })
+    .end((err, res) => {
+      expect(err).to.be.null
+      expect(res.body).to.be.an('object')
+      expect(res.status).to.equal(201)
+      contactId = (res.body._id)
       done()
     })
   })
@@ -350,17 +417,6 @@ describe('GET /api/Contacts, read contact Success and Fail' ,() => {
     })
   })
 
-  it('Error Read All Contacts, request without token', done => {
-    chai.request(app)
-    .get('/api/contacts')
-    .end((err, res) =>{
-      expect(res.status).to.equal(401)
-      expect(res).to.have.property('text')
-      expect(res.body).to.equal("Not Authentication")
-      done()
-    })
-  })
-
   it('Error Read One Contact, request without token', done => {
     chai.request(app)
     .get('/api/contacts'+contactId)
@@ -369,5 +425,4 @@ describe('GET /api/Contacts, read contact Success and Fail' ,() => {
       done()
     })
   })
-  
 })
