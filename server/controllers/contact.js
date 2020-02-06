@@ -38,7 +38,11 @@ class ContactController {
     Contact
       .findOne({ _id: id })
       .then(data => {
-        res.status(200).json(data)
+        if(Object.keys(data).length === 0){
+          next({status: 400, message: 'Data Not Found'})
+        }else {
+          res.status(200).json(data)
+        }
       })
       .catch(next)
   }
@@ -82,7 +86,7 @@ class ContactController {
 
   static delete(req, res, next) {
     const {id} = req.params
-         Portofolio
+         Contact
          .findOneAndDelete({_id: id})
          .then(data => {
             res.status(201).json(data)

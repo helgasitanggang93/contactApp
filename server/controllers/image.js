@@ -10,6 +10,7 @@ class ImagesController {
       api_secret: process.env.CLOUDINARY_API_SECRET
     })
 
+    console.log(req.file)
     if (!req.file) {
       throw { status: 400, message: 'Required Image' }
     } else {
