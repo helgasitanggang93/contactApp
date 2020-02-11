@@ -13,7 +13,7 @@ const authorizationContact = (req, res, next) =>{
     .all([promiseUser, promiseContact])
     .then(values => {
         const [user, Contact] = values
-        if(String(user._id) === String(Contact.userId)){
+        if(String(user._id) === String(Contact.createdBy)){ 
             next()
         } else {
             throw({status: 401, message: 'Not belong to you'})

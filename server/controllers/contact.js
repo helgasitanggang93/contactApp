@@ -67,8 +67,9 @@ class ContactController {
         delete obj[key]
       }
     }
-
+    
     if (Object.keys(obj).length === 0) {
+      
       next({ status: 401, message: 'Nothing Change' })
     } else {
       Contact

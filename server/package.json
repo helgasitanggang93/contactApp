@@ -4,12 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test npx mocha --exit",
+    "test": "NODE_ENV=test nyc mocha --exit",
     "dev": "NODE_ENV=development nodemon app.js",
-    "start":"NODE_ENV=production node app.js",
-    "testWin":"SET \"NODE_ENV=test\" && npx mocha --exit",
-    "devWin":"SET \"NODE_ENV=development\" && nodemon app.js",
-    "startwin":"SET \"NODE_ENV=production\" && node app.js"
+    "start": "NODE_ENV=production node app.js",
+    "testWin": "SET \"NODE_ENV=test\" && npx mocha --exit",
+    "devWin": "SET \"NODE_ENV=development\" && nodemon app.js",
+    "startwin": "SET \"NODE_ENV=production\" && node app.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "dotenv": "^8.2.0",
-    "mocha": "^7.0.1"
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0"
   }
 }
