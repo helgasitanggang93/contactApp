@@ -3,7 +3,7 @@ import ContactPage from './containers/ContactPage';
 import Login from './components/LoginComponent';
 import Register from './components/RegisterComponent';
 import {connect} from 'react-redux';
-import {checkAuthenticated} from './store/actions'
+import {checkAuthenticated, fetchAllContact, clearContacts} from './store/actions'
 import {PrivateRoute} from './helpers/PrivateRoute';
 import {
   Route, 
@@ -11,7 +11,7 @@ import {
   Switch} from 'react-router-dom';
 
 function App(props) {
-  
+
   return (
     <div className="App">
       <header>
@@ -36,4 +36,4 @@ const mapStore = state => {
   return state
 }
 
-export default withRouter(connect(mapStore, {checkAuthenticated})(App));
+export default withRouter(connect(mapStore, {checkAuthenticated, fetchAllContact, clearContacts})(App));

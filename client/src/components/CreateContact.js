@@ -1,15 +1,23 @@
 import React from 'react';
 import FormRoot from './FormRoot';
-
-const CreateContact = () => {
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+import {CreateContactApi} from '../store/actions'
+const CreateContact = (props) => {
   const onSubmit = (formValues) => {
-    console.log(formValues)
+    formValues.phoneNumber = `+${formValues.phoneNumber}`
+    props.CreateContactApi(formValues)
   }
   return (
     <div>
-      <FormRoot onSubmit={onSubmit} />
+      <FormRoot titleForm={'Create Contact'} bindSubmit={onSubmit} />
     </div>
   );
 }
 
-export default CreateContact
+const mapStore = state => {
+  return state
+}
+
+
+export default withRouter(connect(mapStore, {CreateContactApi})(CreateContact));

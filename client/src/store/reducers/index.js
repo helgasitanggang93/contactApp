@@ -3,7 +3,7 @@ import {FETCH_CONTACTS,
   FETCH_DETAILS_CONTACT, 
   IS_LOGIN, 
   ERROR_MESSAGE, 
-  IS_LOADING, IS_ERROR, IS_REGISTER} from '../actions'
+  IS_LOADING, IS_ERROR, IS_REGISTER, CREATE_DATA, IS_UPDATE} from '../actions'
 
 const initialState = {
   contacts: [],
@@ -12,11 +12,18 @@ const initialState = {
   errMessage: '',
   isLoading: false,
   isError: false,
-  isRegister: false
+  isRegister: false,
+  isUpdate: false
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CREATE_DATA: {
+      return {
+        ...state,
+        contacts: [action.payload, ...state.contacts]
+      }
+    }
     case FETCH_CONTACTS: {
         return {
           ...state,
@@ -26,7 +33,7 @@ const reducer = (state = initialState, action) => {
     case FETCH_DETAILS_CONTACT: {
       return {
         ...state,
-        detailContact: {...action.payload}
+        detailContact: action.payload
       }
     }
     case IS_LOGIN: {
@@ -57,6 +64,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isRegister: action.payload
+      }
+    }
+    case IS_UPDATE: {
+      return {
+        ...state,
+        isUpdate: action.payload
       }
     }
     default:

@@ -3,7 +3,7 @@ import {Link, withRouter, useHistory} from 'react-router-dom';
 import {styleFormPosition} from './styles/formstyle';
 import {useFormik} from 'formik';
 import {loginValidation as validate} from './formValidation/loginRegisterValidation';
-import {loginSubmit, checkAuthenticated} from '../store/actions';
+import {loginSubmit, checkAuthenticated, fetchAllContact} from '../store/actions';
 import {connect} from 'react-redux';
 import auth from '../helpers/checkAuth';
 
@@ -31,6 +31,7 @@ const Login = (props) => {
       auth.login(() => {
         history.push('/');
       })
+     
     }
   },[history])
   return (
@@ -79,4 +80,4 @@ const mapStore = state => {
   return state
 }
 
-export default withRouter(connect(mapStore, {loginSubmit, checkAuthenticated})(Login)) 
+export default withRouter(connect(mapStore, {loginSubmit, checkAuthenticated, fetchAllContact})(Login)) 

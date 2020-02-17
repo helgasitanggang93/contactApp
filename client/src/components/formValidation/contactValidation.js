@@ -13,14 +13,17 @@ export const contactValidation = (values) => {
   let errors = {}
   let emailRegex = /^[a-zA-Z ]*$/
   let phoneRegex = /^[0-9]*$/
+
+ 
+
   if (!values.fullName) {
-    errors.email = 'Full name required'
+    errors.fullName = 'Full name required'
   } else if (!emailRegex.test(values.fullName)) {
-    errors.email = 'Full name only contain alphabetic'
+    errors.fullName = 'Full name only contain alphabetic'
   }
 
   if (!values.address) {
-    errors.address = 'Password required'
+    errors.address = 'Address required'
   } else if (values.address.length < 3 || values.address.length > 100) {
     errors.address = 'Length of Address should be greater then 3 and less then 101'
   }
