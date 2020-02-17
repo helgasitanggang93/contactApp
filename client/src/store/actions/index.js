@@ -151,10 +151,14 @@ export const loginSubmit = (values) => dispatch => {
         type: IS_LOADING,
         payload: false
       })
-      
+
     })
     .catch(error => {
       if (error.response) {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
         dispatch({
           type: IS_ERROR,
           payload: true
@@ -174,6 +178,10 @@ export const loginSubmit = (values) => dispatch => {
           })
         }, 3000)
       } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
         dispatch({
           type: IS_ERROR,
           payload: true
@@ -243,7 +251,55 @@ export const CreateContactApi = (values) => async dispatch => {
 
     }
   } catch (error) {
-    console.log(error.response)
+    if (error.response) {
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_ERROR,
+        payload: true
+      })
+      dispatch({
+        type: ERROR_MESSAGE,
+        payload: error.response.data
+      })
+      setTimeout(() => {
+        dispatch({
+          type: IS_ERROR,
+          payload: false
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: ''
+        })
+      }, 3000)
+    } else {
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_ERROR,
+        payload: true
+      })
+      dispatch({
+        type: ERROR_MESSAGE,
+        payload: 'Network Error/Server Error'
+      })
+
+      setTimeout(() => {
+        dispatch({
+          type: IS_ERROR,
+          payload: false
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: ''
+        })
+      }, 3000)
+
+    }
   }
 
 }
@@ -253,22 +309,70 @@ export const fetchAllContact = () => dispatch => {
     type: IS_LOADING,
     payload: true
   })
-  
+
   axios.defaults.headers.common["token"] = localStorage.token;
   axios.get('/contacts')
-  .then(({data}) => {
-    dispatch({
-      type: FETCH_CONTACTS,
-      payload: data
+    .then(({ data }) => {
+      dispatch({
+        type: FETCH_CONTACTS,
+        payload: data
+      })
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
     })
-    dispatch({
-      type: IS_LOADING,
-      payload: false
+    .catch(error => {
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      if (error.response) {
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: error.response.data
+        })
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+      } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: 'Network Error/Server Error'
+        })
+
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+
+      }
     })
-  })
-  .catch(error => {
-    console.log(error)
-  })  
 }
 
 export const fetchOneContact = (id) => dispatch => {
@@ -276,123 +380,317 @@ export const fetchOneContact = (id) => dispatch => {
     type: IS_LOADING,
     payload: true
   })
-  
+
   axios.defaults.headers.common["token"] = localStorage.token;
   axios.get(`/contacts/${id}`)
-  .then(({data}) => {
-    dispatch({
-      type: FETCH_DETAILS_CONTACT,
-      payload: data
+    .then(({ data }) => {
+      dispatch({
+        type: FETCH_DETAILS_CONTACT,
+        payload: data
+      })
+      dispatch({
+        type: IS_UPDATE,
+        payload: true
+      })
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
     })
-    dispatch({
-      type: IS_UPDATE,
-      payload: true
+    .catch(error => {
+      if (error.response) {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: error.response.data
+        })
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+      } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: 'Network Error/Server Error'
+        })
+
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+
+      }
     })
-    dispatch({
-      type: IS_LOADING,
-      payload: false
-    })
-  })
-  .catch(error => {
-    console.log(error)
-  })  
 }
 
 export const updateContactApi = (values, id) => async (dispatch, getState) => {
   dispatch({
-    type: IS_LOADING, 
-    payload:true
+    type: IS_LOADING,
+    payload: true
   })
   axios.defaults.headers.common["token"] = localStorage.token;
-  let newContacts = getState().reducer.contacts.filter(element =>{
-      return element._id !== id
+  let newContacts = getState().reducer.contacts.filter(element => {
+    return element._id !== id
   })
-  const {fullName, address, phoneNumber, image} = values
-  if(typeof image === 'object'){
-      try {
-          let formdata = new FormData()
-          formdata.append('image', image[0])
-          let imageLink = await axios.post('/upload', formdata)
-          let {data} =  await axios.patch(`/contacts/${id}`,{
-              fullName: fullName,
-              address: address,
-              phoneNumber: phoneNumber,
-              image: imageLink.data.link})
-              dispatch({
-                  type: FETCH_CONTACTS,
-                  payload: [data, ...newContacts],
-              })
-              dispatch({
-                type: IS_LOADING, 
-                payload:false
-              })
-              dispatch({
-                type: IS_UPDATE, 
-                payload:false
-              })
-
-              dispatch({
-                type: FETCH_DETAILS_CONTACT,
-                payload: {},
-            })
-
-      }catch(error){
-        console.log(error)
-      } 
-  }else if(typeof image === 'string'){
-      try {
-        dispatch({
-          type: FETCH_DETAILS_CONTACT,
-          payload: {},
+  const { fullName, address, phoneNumber, image } = values
+  if (typeof image === 'object') {
+    try {
+      let formdata = new FormData()
+      formdata.append('image', image[0])
+      let imageLink = await axios.post('/upload', formdata)
+      let { data } = await axios.patch(`/contacts/${id}`, {
+        fullName: fullName,
+        address: address,
+        phoneNumber: phoneNumber,
+        image: imageLink.data.link
       })
-          let {data} =  await axios.patch(`/contacts/${id}`,{
-              fullName: fullName,
-              address: address,
-              phoneNumber: phoneNumber})
-              dispatch({
-                type: FETCH_CONTACTS,
-                payload: [data, ...newContacts],
-            })
-            dispatch({
-              type: IS_LOADING, 
-              payload:false
-            })
-            dispatch({
-              type: IS_UPDATE, 
-              payload:false
-            })
-            dispatch({
-              type: FETCH_DETAILS_CONTACT,
-              payload: {},
+      dispatch({
+        type: FETCH_CONTACTS,
+        payload: [data, ...newContacts],
+      })
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_UPDATE,
+        payload: false
+      })
+
+      dispatch({
+        type: FETCH_DETAILS_CONTACT,
+        payload: {},
+      })
+
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: error.response.data
+        })
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
           })
-            
-      } catch (error) {
-        console.log(error)
-          
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+      } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: 'Network Error/Server Error'
+        })
+
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+
       }
+    }
+  } else if (typeof image === 'string') {
+    try {
+      dispatch({
+        type: FETCH_DETAILS_CONTACT,
+        payload: {},
+      })
+      let { data } = await axios.patch(`/contacts/${id}`, {
+        fullName: fullName,
+        address: address,
+        phoneNumber: phoneNumber
+      })
+      dispatch({
+        type: FETCH_CONTACTS,
+        payload: [data, ...newContacts],
+      })
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_UPDATE,
+        payload: false
+      })
+      dispatch({
+        type: FETCH_DETAILS_CONTACT,
+        payload: {},
+      })
+
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: error.response.data
+        })
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+      } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: 'Network Error/Server Error'
+        })
+
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+
+      }
+
+    }
   }
 
 }
 
 export const deleteContactApi = (id) => (dispatch, getState) => {
   dispatch({
-      type: IS_LOADING,
-      paylaod: true
+    type: IS_LOADING,
+    paylaod: true
   })
   axios.defaults.headers.common["token"] = localStorage.token;
   axios.delete(`/contacts/${id}`)
-  .then(({data}) => {
-    let newContacts = getState().reducer.contacts.filter(element=> element._id !== data._id)
+    .then(({ data }) => {
+      let newContacts = getState().reducer.contacts.filter(element => element._id !== data._id)
       dispatch({
-          type:FETCH_CONTACTS,
-          payload: newContacts
+        type: FETCH_CONTACTS,
+        payload: newContacts
       })
       dispatch({
         type: IS_LOADING,
         paylaod: false
+      })
     })
-  })
-  .catch( error => {
-      console.log(error)
-  })
+    .catch(error => {
+      if (error.response) {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: error.response.data
+        })
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+      } else {
+        dispatch({
+          type: IS_LOADING,
+          payload: false
+        })
+        dispatch({
+          type: IS_ERROR,
+          payload: true
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: 'Network Error/Server Error'
+        })
+
+        setTimeout(() => {
+          dispatch({
+            type: IS_ERROR,
+            payload: false
+          })
+          dispatch({
+            type: ERROR_MESSAGE,
+            payload: ''
+          })
+        }, 3000)
+
+      }
+    })
 }

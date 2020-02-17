@@ -36,6 +36,7 @@ class ContactPage extends React.Component {
           <button className="btn btn-outline-light" onClick={() => this.logOut()}>Log Out</button>
         </nav>
         <h2 className="text-center pt-2">CONTACT APP</h2>
+        {this.props.reducer.isError ? <p className="text-danger" role="alert">{this.props.reducer.errMessage}</p>: ''}
         </header>
        <section className="container-fluid">
          <div className="row">
