@@ -1,11 +1,13 @@
-require('dotenv').config();
+if(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development'){
+  require('dotenv').config();
+}
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 const contactRoutes = require('./routes');
 const mongoose = require('mongoose');
-const uri = `mongodb://localhost:27017/contact-app` + process.env.NODE_ENV
+const uri =process.env.MONGODB_URI || `mongodb://localhost:27017/contact-app` + process.env.NODE_ENV
 const errHandler = require('./helpers/errhandler')
 
 mongoose.set('useNewUrlParser', true);

@@ -10,18 +10,15 @@ import { connect } from 'react-redux';
 class ContactPage extends React.Component {
   componentDidMount(){
     if(localStorage.token){
-      console.log('masuuuk component DID mount [ContactPage.js]')
       this.props.fetchAllContact()
     }
   }
 
   componentWillUnmount(){
-    console.log('kalo udah clear')
     this.props.clearContacts()
   }
 
  logOut = () => {
-  //  let history = useHistory()
     auth.logout(() => {
       this.props.history.push('/login')
     })
