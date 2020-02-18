@@ -7,7 +7,10 @@ const cors = require('cors');
 const port = process.env.PORT || 3001;
 const contactRoutes = require('./routes');
 const mongoose = require('mongoose');
-const uri =process.env.MONGODB_URI || `mongodb://localhost:27017/contact-app` + process.env.NODE_ENV
+let uri =`mongodb://localhost:27017/contact-app` + process.env.NODE_ENV
+if(process.env.NODE_ENV === 'production'){
+  uri = process.env.MONGODB_URI
+}
 const errHandler = require('./helpers/errhandler')
 
 mongoose.set('useNewUrlParser', true);
