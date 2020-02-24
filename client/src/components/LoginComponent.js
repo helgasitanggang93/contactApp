@@ -1,15 +1,12 @@
-import React, {useEffect} from 'react';
-import {Link, withRouter, useHistory} from 'react-router-dom';
+import React from 'react';
+import {Link, withRouter} from 'react-router-dom';
 import {styleFormPosition} from './styles/formstyle';
 import {useFormik} from 'formik';
 import {loginValidation as validate} from './formValidation/loginRegisterValidation';
 import {loginSubmit, checkAuthenticated, fetchAllContact} from '../store/actions';
 import {connect} from 'react-redux';
-import auth from '../helpers/checkAuth';
 
 const Login = (props) => {
-  let history = useHistory()
-  
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -17,23 +14,12 @@ const Login = (props) => {
     },
     validate,
     onSubmit: (values, {setSubmitting, resetForm}) => {
-      props.loginSubmit(values)
-      setSubmitting(false)
+      props.loginSubmit(values, props.history)
       resetForm()
-        auth.login(() => {
-          history.push('/');
-        })
-    }
-  })
-
-  useEffect(() => {
-    if(localStorage.token){
-      auth.login(() => {
-        history.push('/');
-      })
+      setSubmitting(false)
      
     }
-  },[history])
+  })
   return (
     <div id="login-page">
     <h1 className="display-4 text-center"> Welcome To Contact App </h1>

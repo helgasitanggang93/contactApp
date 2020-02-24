@@ -12,27 +12,17 @@ const ListContacts = (props) => {
     props.fetchOneContact(contactId)
   }
 
-  const loadingSpinner = () => {
-    return (
-      <div className="spinner-grow text-primary" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    );
-  }
-
   const {fetchAllContact} = props
+  const {isLogin} = props.reducer
   useEffect(() => {
-    if(props.reducer.isLogin){
-      console.log('Masuukk Use Effect [ListContact.js]')
+    if(isLogin){
       fetchAllContact()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localStorage.token])
+  }, [fetchAllContact, isLogin])
     
   return (
     <div className="shadow p-3 bg-white rounded" style={{margin: '0'}}>
       <div className="row">
-        {props.reducer.isLoading ? loadingSpinner() : ''}
         {props.reducer.contacts.map(element => {
           return (
             <div key={element._id} className="col-6">

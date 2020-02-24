@@ -29,6 +29,14 @@ export const clearErrMessage = () => dispatch => {
   })
 }
 
+export const changeLoginStatus = (value) => dispatch => {
+  dispatch({
+    type: IS_LOGIN,
+    payload: value
+  })
+
+}
+
 export const cancelSubmit = () => dispatch => {
   dispatch({
     type: FETCH_DETAILS_CONTACT,
@@ -131,7 +139,7 @@ export const registerSubmit = (values) => dispatch => {
     })
 }
 
-export const loginSubmit = (values) => dispatch => {
+export const loginSubmit = (values, history) => dispatch => {
   dispatch({
     type: IS_LOADING,
     payload: true
@@ -142,16 +150,19 @@ export const loginSubmit = (values) => dispatch => {
     password: password
   })
     .then(({ data }) => {
+      if(data){
+        dispatch({
+          type: IS_LOGIN,
+          payload: true
+        })
+      }
       localStorage.setItem('token', data.token)
-      dispatch({
-        type: IS_LOGIN,
-        payload: true
-      })
+      history.push('/')
       dispatch({
         type: IS_LOADING,
         payload: false
       })
-
+     
     })
     .catch(error => {
       if (error.response) {
@@ -319,6 +330,10 @@ export const fetchAllContact = () => dispatch => {
       })
       dispatch({
         type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_LOGIN,
         payload: false
       })
     })

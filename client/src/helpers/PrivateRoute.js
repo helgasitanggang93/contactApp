@@ -1,23 +1,20 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router-dom';
-import auth from '../helpers/checkAuth';
-
-export function PrivateRoute({ comp: Component, ...rest }) {
+import {Route, Redirect,withRouter} from 'react-router-dom';
+import {connect} from 'react-redux'
+const PrivateRoute = ({ comp: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) =>
-        auth.isAuthenticated() ? 
-          <Component {...props}/>
-         : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
+      render={(props) => 
+       localStorage.token ? 
+        <Component {...props}/> 
+        : (<Redirect to={{pathname: "/login", state: {from: props.location}}}/>)}
     />
   );
 }
+
+const mapToStore = state => {
+  return state
+}
+
+export default withRouter(connect(mapToStore, {})(PrivateRoute))

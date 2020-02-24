@@ -1,27 +1,28 @@
 import React from 'react';
-import auth from '../helpers/checkAuth';
 import CreateContact from '../components/CreateContact';
 import ListContact from '../components/ListContacts';
 import UpdateContact from '../components/UpdateContact';
-import {fetchAllContact, clearContacts} from '../store/actions'
+import LoadingPage from '../components/LoadingPage';
+import {fetchAllContact, clearContacts, changeLoginStatus} from '../store/actions'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class ContactPage extends React.Component {
   componentDidMount(){
-    if(localStorage.token){
+    if(localStorage.token){ 
       this.props.fetchAllContact()
+      this.props.changeLoginStatus(true)
     }
   }
 
   componentWillUnmount(){
     this.props.clearContacts()
+
   }
 
- logOut = () => {
-    auth.logout(() => {
-      this.props.history.push('/login')
-    })
+  logOut = () => {
+    localStorage.clear()
+    this.props.history.push('/login')
   }
 
   render(){
@@ -41,7 +42,7 @@ class ContactPage extends React.Component {
              {this.props.reducer.isUpdate ? <UpdateContact/> : <CreateContact/>}
            </div>
            <div className="col-8">
-             <ListContact/>
+            {this.props.reducer.isLoading ? <LoadingPage/> : <ListContact/>}
            </div>
          </div>
        </section>
@@ -55,4 +56,4 @@ const mapStore = state => {
   return state
 }
 
-export default withRouter(connect(mapStore, {fetchAllContact, clearContacts})(ContactPage)) 
+export default withRouter(connect(mapStore, {fetchAllContact, clearContacts, changeLoginStatus})(ContactPage)) 
