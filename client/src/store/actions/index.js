@@ -29,6 +29,66 @@ export const clearErrMessage = () => dispatch => {
   })
 }
 
+export const ascendingSort = (values) => (dispatch, getState) => {
+  if(values === 'name'){
+    let sortedName = getState().reducer.contacts.sort(function (a,b) {
+      if(a.fullName < b.fullName) { return -1; }
+      if(a.fullName > b.fullName) { return 1; }
+       return 0;
+    })
+    dispatch({
+      type: FETCH_CONTACTS,
+      payload: sortedName
+    })
+  }else if(values === 'address'){
+    let sortedAddress = getState().reducer.contacts.sort(function (a,b) {
+      if(a.address < b.address) { return -1; }
+      if(a.address > b.address) { return 1; }
+       return 0;
+    })
+    dispatch({
+      type: FETCH_CONTACTS,
+      payload: sortedAddress
+    })
+  }
+}
+
+export const descendingSort = (values) => (dispatch, getState) => {
+  dispatch({
+    type: IS_LOADING,
+    payload: true
+  })
+  if(values === 'name'){
+    let sortedName = getState().reducer.contacts.sort(function (a,b) {
+      if(a.fullName > b.fullName) { return -1; }
+      if(a.fullName < b.fullName) { return 1; }
+       return 0;
+    })
+    dispatch({
+      type: FETCH_CONTACTS,
+      payload: sortedName
+    })
+    dispatch({
+      type: IS_LOADING,
+      payload: false
+    })
+  }else if(values === 'address'){
+    let sortedAddress = getState().reducer.contacts.sort(function (a,b) {
+      if(a.address > b.address) { return -1; }
+      if(a.address < b.address) { return 1; }
+       return 0;
+    })
+    dispatch({
+      type: FETCH_CONTACTS,
+      payload: sortedAddress
+    })
+    dispatch({
+      type: IS_LOADING,
+      payload: false
+    })
+  }
+}
+
 export const changeLoginStatus = (value) => dispatch => {
   dispatch({
     type: IS_LOGIN,

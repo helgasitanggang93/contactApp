@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingPage from '../components/LoadingPage';
 import { Link , withRouter, Redirect} from 'react-router-dom';
 import { styleFormPosition } from './styles/formstyle';
 import {useFormik} from 'formik';
@@ -81,7 +82,7 @@ const Register = (props) => {
               className="form-control" />
               {formik.touched.rePassword && formik.errors.rePassword ? <p className="text-danger" role="alert">{formik.errors.rePassword}</p>: ''}
             </div>
-            <button type="submit" className="btn btn-primary text-center"> Submit </button>
+            {props.reducer.isLoading ? <LoadingPage/> : <button type="submit" className="btn btn-primary text-center"> Submit </button>}
           </form>
         </div>
       </section>

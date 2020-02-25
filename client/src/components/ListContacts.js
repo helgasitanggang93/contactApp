@@ -1,6 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {deleteContactApi, fetchAllContact, clearContacts, fetchOneContact} from '../store/actions';
+import {
+  deleteContactApi, 
+  fetchAllContact, 
+  clearContacts, 
+  fetchOneContact,
+ascendingSort,
+descendingSort} from '../store/actions';
 
 const ListContacts = (props) => {
  
@@ -11,9 +17,28 @@ const ListContacts = (props) => {
   const updateContact = (contactId) => {
     props.fetchOneContact(contactId)
   }
-  
+
+  const Sort = () => {
+    return (
+      <div className="dropdown pb-1">
+        <button className="btn btn-info dropdown-toggle text-white" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sort
+        </button>
+        <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <button onClick={() => props.ascendingSort('name')} type="button" className="btn btn-link text-dark" style={{textDecoration: 'none'}}>Sort Name A-Z</button><br/>
+        <button onClick={() => props.descendingSort('name')} type="button" className="btn btn-link text-dark" style={{textDecoration: 'none'}}>Sort Name Z-A</button>
+        <div className="dropdown-divider"></div>
+        <button onClick={() => props.ascendingSort('address')} type="button" className="btn btn-link text-dark" style={{textDecoration: 'none'}}>Sort Address A-Z</button><br/>
+        <button onClick={() => props.descendingSort('address')} type="button" className="btn btn-link text-dark" style={{textDecoration: 'none'}}>Sort Address Z-A</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="shadow p-3 bg-white rounded" style={{margin: '0'}}>
+       {props.reducer.contacts.length !== 0 ? <p className="h4 text-center">Contact List</p> : <p className="h4 text-center">Create Your Contact</p>}
+      {props.reducer.contacts.length !== 0 ? <Sort/> : ''}
       <div className="row">
         {props.reducer.contacts.map(element => {
           return (
@@ -43,4 +68,10 @@ const ListContacts = (props) => {
 const mapStore = state => {
   return state
 }
-export default connect(mapStore, {deleteContactApi, fetchAllContact, clearContacts, fetchOneContact})(ListContacts)
+export default connect(mapStore, {
+  deleteContactApi, 
+  fetchAllContact, 
+  clearContacts, 
+  fetchOneContact,
+ascendingSort, 
+descendingSort})(ListContacts)
