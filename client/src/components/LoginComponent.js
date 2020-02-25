@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingPage from '../components/LoadingPage';
 import {Link, withRouter} from 'react-router-dom';
 import {styleFormPosition} from './styles/formstyle';
 import {useFormik} from 'formik';
@@ -53,7 +54,7 @@ const Login = (props) => {
             {formik.touched.password && formik.errors.password ? <p className="text-danger" role="alert">{formik.errors.password}</p>: ''}
           </div>
           <div id="button-submit-login" className="text-center">
-          <button type="submit" className="btn btn-primary"> Submit </button>
+          {props.reducer.isLoading ? <LoadingPage/> : <button type="submit" className="btn btn-primary"> Submit </button>}
             <Link className="p-1" to="/signup">Not have any account yet?</Link>
           </div>
         </form>

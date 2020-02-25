@@ -18,8 +18,9 @@ const FormRoot = (props) => {
       props.bindSubmit(values, props.reducer.detailContact._id)
       setValues({fullName: '', address: '', image: '', phoneNumber: ''})
       resetForm({})
-      setFieldValue('image', {})
+      setFieldValue('image', undefined)
       setSubmitting(false)
+      document.getElementById("form-contact").reset();
     }
   })
 
@@ -27,6 +28,7 @@ const FormRoot = (props) => {
     event.preventDefault()
     formik.setValues({fullName: '', address: '', image: '', phoneNumber: ''})
     formik.setFieldValue('image', undefined)
+    document.getElementById("form-contact").reset();
     props.cancelSubmit()
   }
 
@@ -35,7 +37,7 @@ const FormRoot = (props) => {
   }
   return (
     <div className="shadow p-3 bg-white rounded">
-      <form onSubmit={formik.handleSubmit}>
+      <form id="form-contact" onSubmit={formik.handleSubmit}>
         <div id="form-root-title">
           <h4 className="text-center"> {props.titleForm} </h4>
         </div>

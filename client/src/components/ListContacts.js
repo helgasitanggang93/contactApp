@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {deleteContactApi, fetchAllContact, clearContacts, fetchOneContact} from '../store/actions';
 
@@ -11,15 +11,7 @@ const ListContacts = (props) => {
   const updateContact = (contactId) => {
     props.fetchOneContact(contactId)
   }
-
-  const {fetchAllContact} = props
-  const {isLogin} = props.reducer
-  useEffect(() => {
-    if(isLogin){
-      fetchAllContact()
-    }
-  }, [fetchAllContact, isLogin])
-    
+  
   return (
     <div className="shadow p-3 bg-white rounded" style={{margin: '0'}}>
       <div className="row">

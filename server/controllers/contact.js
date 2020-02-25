@@ -1,5 +1,5 @@
 const Contact = require('../models/contact')
-
+const {clearHash} = require('../helpers/cache');
 class ContactController {
   static create(req, res, next) {
     const {
@@ -19,13 +19,14 @@ class ContactController {
       })
       .then((data) => {
         res.status(201).json(data)
+        clearHash(data.createdBy)
       })
       .catch(next)
   }
 
   static readAll(req, res, next) {
     const { createdBy } = req.body
-    Contact.find({ createdBy })
+    Contact.find({ createdBy }).cache({key: createdBy})
       .then(data => {
         res.status(200).json(data)
       })
@@ -75,11 +76,11 @@ class ContactController {
       Contact
         .findOneAndUpdate({ _id: id }, obj)
         .then(() => {
-
           return Contact.findOne({ _id: id })
         })
         .then(data => {
           res.status(200).json(data)
+          clearHash(data.createdBy)
         })
         .catch(next)
     }
@@ -91,6 +92,7 @@ class ContactController {
          .findOneAndDelete({_id: id})
          .then(data => {
             res.status(201).json(data)
+            clearHash(data.createdBy)
          })
          .catch(next)
 

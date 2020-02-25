@@ -1,6 +1,7 @@
 if(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development'){
   require('dotenv').config();
 }
+require('./helpers/cache');
 const express = require('express');
 const app = express();
 const cors = require('cors');
