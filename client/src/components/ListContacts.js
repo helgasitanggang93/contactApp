@@ -1,19 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Modal, Button} from 'react-bootstrap'
 import { connect } from 'react-redux';
 import {
-  deleteContactApi, 
-  fetchAllContact, 
-  clearContacts, 
-  fetchOneContact,
+deleteContactApi, 
+fetchAllContact, 
+clearContacts, 
+fetchOneContact,
 ascendingSort,
-descendingSort} from '../store/actions';
+descendingSort,
+cancelSubmit} from '../store/actions';
 
 const ListContacts = (props) => {
- 
-  const deleteContact = (contactId) => {
-    props.deleteContactApi(contactId)
-  }
-
+  const [show, setShow] = useState(false)
+  const [id, setId] = useState('')
+  const [name, setName] = useState('')
   const updateContact = (contactId) => {
     props.fetchOneContact(contactId)
   }
@@ -35,6 +35,44 @@ const ListContacts = (props) => {
     );
   }
 
+  const triggerButton = (status, contactId, fullName) => {
+    setShow(status)
+    setId(contactId)
+    setName(fullName)
+    props.cancelSubmit()
+  }
+  const DeleteButton = () => {
+    
+    const handleClose = () => {
+      setId('')
+      setName('')
+      setShow(false)
+    }
+    const deleteContact = () => {
+      props.deleteContactApi(id)
+      setShow(false)
+      setId('')
+      setName('')
+    }
+    return(
+      <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title>DELETE ALERT</Modal.Title>
+        </Modal.Header>
+        <Modal.Body><p>Are you sure you want to permanently delete <strong>{name}</strong> contact?</p></Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <button className="btn btn-danger" onClick={deleteContact}>
+            Yes, Delete it!!
+          </button>
+        </Modal.Footer>
+      </Modal>
+    </>
+    );
+  }
   return (
     <div className="shadow p-3 bg-white rounded" style={{margin: '0'}}>
        {props.reducer.contacts.length !== 0 ? <p className="h4 text-center">Contact List</p> : <p className="h4 text-center">Create Your Contact</p>}
@@ -53,13 +91,16 @@ const ListContacts = (props) => {
                 <p>Phone Number:{element.phoneNumber}</p>
                 <div>
                 <button onClick={() => updateContact(element._id)} className="btn btn-warning btn-sm m-1" type="button">Update</button>
-                <button onClick={() => deleteContact(element._id)} className="btn btn-danger btn-sm" type="button">Delete</button>
+                <button className="btn btn-danger btn-sm" type="button" onClick={() => triggerButton(true, element._id, element.fullName)}>
+                delete
+               </button>
               </div>
               </div>
             </div>   
           </div>
           );
         })}
+         <DeleteButton/>
       </div>
     </div>
   );
@@ -69,9 +110,10 @@ const mapStore = state => {
   return state
 }
 export default connect(mapStore, {
-  deleteContactApi, 
-  fetchAllContact, 
-  clearContacts, 
-  fetchOneContact,
+deleteContactApi, 
+fetchAllContact, 
+clearContacts, 
+fetchOneContact,
 ascendingSort, 
-descendingSort})(ListContacts)
+descendingSort,
+cancelSubmit})(ListContacts)
