@@ -29,7 +29,7 @@ mongoose.Query.prototype.exec = async function () {
    return Array.isArray(doc) ? doc.map(element => new this.model(element)) : new this.model(doc) 
   }
   const result = await exec.apply(this, arguments)
-  client.hset(this.hashKey, key, JSON.stringify(result), 'EX', 1800)
+  client.hset(this.hashKey, key, JSON.stringify(result), 'EX', 20)
   return result
 }
 

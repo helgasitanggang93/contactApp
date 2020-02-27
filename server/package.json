@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test nyc mocha --exit",
     "dev": "NODE_ENV=development nodemon app.js",
-    "start": "NODE_ENV=production node app.js",
+    "start": "NODE_ENV=production pm2 start app.js",
     "testWin": "SET \"NODE_ENV=test\" && npx mocha --exit",
     "devWin": "SET \"NODE_ENV=development\" && nodemon app.js",
     "startwin": "SET \"NODE_ENV=production\" && node app.js"
