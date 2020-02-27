@@ -17,10 +17,9 @@ const FormRoot = (props) => {
     onSubmit: (values, { setSubmitting, resetForm, setFieldValue , setValues}) => {
       props.bindSubmit(values, props.reducer.detailContact._id)
       setValues({fullName: '', address: '', image: '', phoneNumber: ''})
-      resetForm({})
       setFieldValue('image', undefined)
-      setSubmitting(false)
       document.getElementById("form-contact").reset();
+      props.cancelSubmit()
     }
   })
 

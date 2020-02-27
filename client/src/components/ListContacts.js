@@ -143,7 +143,7 @@ const ListContacts = props => {
       </>
     );
   };
-  
+
   return (
     <div className="shadow p-3 bg-white rounded" style={{ margin: "0" }}>
       {props.reducer.contacts.length !== 0 ? (
@@ -151,14 +151,14 @@ const ListContacts = props => {
       ) : (
         <p className="h4 text-center">Create Your Contact</p>
       )}
-      <div class="d-flex flex-row bd-highlight">
+      <div className="d-flex flex-row bd-highlight">
         {props.reducer.contacts.length !== 0 ? <Sort /> : ""}
         <UploadCsv />
       </div>
       <div className="row">
         {props.reducer.contacts.map(element => {
           return (
-            <div key={element._id} className="col-6">
+            <div key={element._id} className="text-center col-sm col-md-6 m-0 p-0">
               <div
                 className="d-inline-flex shadow bg-white rounded mb-3"
                 style={{ width: "400px", height: "200px", overflow: "auto" }}
