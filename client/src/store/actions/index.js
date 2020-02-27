@@ -11,7 +11,6 @@ export const IS_REGISTER = 'is_register'
 export const IS_UPDATE = 'is_update'
 export const CREATE_DATA = 'create_data'
 
-
 export const clearErrMessage = () => dispatch => {
   dispatch({
     type: ERROR_MESSAGE,
@@ -30,21 +29,21 @@ export const clearErrMessage = () => dispatch => {
 }
 
 export const ascendingSort = (values) => (dispatch, getState) => {
-  if(values === 'name'){
-    let sortedName = getState().reducer.contacts.sort(function (a,b) {
-      if(a.fullName < b.fullName) { return -1; }
-      if(a.fullName > b.fullName) { return 1; }
-       return 0;
+  if (values === 'name') {
+    let sortedName = getState().reducer.contacts.sort(function (a, b) {
+      if (a.fullName < b.fullName) { return -1; }
+      if (a.fullName > b.fullName) { return 1; }
+      return 0;
     })
     dispatch({
       type: FETCH_CONTACTS,
       payload: sortedName
     })
-  }else if(values === 'address'){
-    let sortedAddress = getState().reducer.contacts.sort(function (a,b) {
-      if(a.address < b.address) { return -1; }
-      if(a.address > b.address) { return 1; }
-       return 0;
+  } else if (values === 'address') {
+    let sortedAddress = getState().reducer.contacts.sort(function (a, b) {
+      if (a.address < b.address) { return -1; }
+      if (a.address > b.address) { return 1; }
+      return 0;
     })
     dispatch({
       type: FETCH_CONTACTS,
@@ -58,11 +57,11 @@ export const descendingSort = (values) => (dispatch, getState) => {
     type: IS_LOADING,
     payload: true
   })
-  if(values === 'name'){
-    let sortedName = getState().reducer.contacts.sort(function (a,b) {
-      if(a.fullName > b.fullName) { return -1; }
-      if(a.fullName < b.fullName) { return 1; }
-       return 0;
+  if (values === 'name') {
+    let sortedName = getState().reducer.contacts.sort(function (a, b) {
+      if (a.fullName > b.fullName) { return -1; }
+      if (a.fullName < b.fullName) { return 1; }
+      return 0;
     })
     dispatch({
       type: FETCH_CONTACTS,
@@ -72,11 +71,11 @@ export const descendingSort = (values) => (dispatch, getState) => {
       type: IS_LOADING,
       payload: false
     })
-  }else if(values === 'address'){
-    let sortedAddress = getState().reducer.contacts.sort(function (a,b) {
-      if(a.address > b.address) { return -1; }
-      if(a.address < b.address) { return 1; }
-       return 0;
+  } else if (values === 'address') {
+    let sortedAddress = getState().reducer.contacts.sort(function (a, b) {
+      if (a.address > b.address) { return -1; }
+      if (a.address < b.address) { return 1; }
+      return 0;
     })
     dispatch({
       type: FETCH_CONTACTS,
@@ -210,7 +209,7 @@ export const loginSubmit = (values, history) => dispatch => {
     password: password
   })
     .then(({ data }) => {
-      if(data){
+      if (data) {
         dispatch({
           type: IS_LOGIN,
           payload: true
@@ -222,7 +221,7 @@ export const loginSubmit = (values, history) => dispatch => {
         type: IS_LOADING,
         payload: false
       })
-     
+
     })
     .catch(error => {
       if (error.response) {
@@ -768,4 +767,76 @@ export const deleteContactApi = (id) => (dispatch, getState) => {
 
       }
     })
+}
+
+export const uploadCsvApi = (values) => async dispatch => {
+  dispatch({
+    type: IS_LOADING,
+    payload: true
+  })
+  try {
+    let formdata = new FormData()
+    formdata.append('csv', values[0])
+    axios.defaults.headers.common["token"] = localStorage.token;
+    let contactCsv = await axios.post('/upload/csv', formdata)
+    dispatch({
+      type: FETCH_CONTACTS,
+      payload: contactCsv.data
+    })
+    dispatch({
+      type: IS_LOADING,
+      payload: false
+    })
+
+  } catch (error) {
+    if (error.response) {
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_ERROR,
+        payload: true
+      })
+      dispatch({
+        type: ERROR_MESSAGE,
+        payload: error.response.data
+      })
+      setTimeout(() => {
+        dispatch({
+          type: IS_ERROR,
+          payload: false
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: ''
+        })
+      }, 3000)
+    } else {
+      dispatch({
+        type: IS_LOADING,
+        payload: false
+      })
+      dispatch({
+        type: IS_ERROR,
+        payload: true
+      })
+      dispatch({
+        type: ERROR_MESSAGE,
+        payload: 'Network Error/Server Error'
+      })
+
+      setTimeout(() => {
+        dispatch({
+          type: IS_ERROR,
+          payload: false
+        })
+        dispatch({
+          type: ERROR_MESSAGE,
+          payload: ''
+        })
+      }, 3000)
+
+    }
+  }
 }
