@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose
+const {messageHandler, stringType} = require('../helpers/constantType');
 
 const ContactSchema = new Schema({
     fullName: {
       type: String, 
-      required: [true, 'Name must be required'],
+      required: [true, messageHandler.name.errNameEmpty],
       validate:[{
         validator: (value) => {
           let regex = /^[a-zA-Z ]*$/
           return regex.test(value)
         },
-        message: 'Full name only contain alphabetic'
+        message: messageHandler.name.errNameFormat
       }]
     },
     address: {
       type: String, 
-      required: [true, 'Address must be required'],
+      required: [true, messageHandler.address.errAddressEmpty],
       validate: [{
         validator: (value) => {
           if(value.length < 3 || value.length > 100){
@@ -24,19 +25,19 @@ const ContactSchema = new Schema({
             return true
           }
         },
-        message: 'Length of Address should be greater then 3 and less then 101'
+        message: messageHandler.address.errLengthAddress
       }]
     },
-    image: {type: String, default: 'https://res.cloudinary.com/dpnjbs730/image/upload/v1574910240/no_image_yet_fmxurx.jpg'},
+    image: {type: String, default: stringType.imageDefault},
     phoneNumber: {
       type: String, 
-      required: [true, 'Phone Number must be required'],
+      required: [true, messageHandler.phoneNumber.errPhoneNumberEmpty],
       validate: [{
         validator: (value) => {
           let regex = /^[\d +]+$/;
           return regex.test(value)
         },
-        message: 'Phone Number only contain Number and +'
+        message: messageHandler.phoneNumber.errPhoneNumberFormat
       }]},
     createdBy:{type: Schema.Types.ObjectId, ref: 'User'}
 })

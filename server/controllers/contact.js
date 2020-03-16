@@ -1,7 +1,25 @@
-const Contact = require('../models/contact')
+const Contact = require('../models/contact');
 const {clearHash} = require('../helpers/cache');
+const {messageHandler} = require('../helpers/constantType');
+/**
+ *
+ *
+ * @class ContactController
+ */
 class ContactController {
+  /**
+   *
+   * static method to create contact Data
+   * @static
+   * @param {*} req - receiving req.body
+   * @param {*} res - sending res.json(contact Data)
+   * @param {*} next - to sending to errhandler
+   * @memberof ContactController
+   */
   static create(req, res, next) {
+    /**
+     * Destructuring req.body
+     */
     const {
       fullName,
       address,
@@ -18,13 +36,31 @@ class ContactController {
         createdBy
       })
       .then((data) => {
+        /**
+         * sending created contact data
+         */
         res.status(201).json(data)
+        /**
+         * clear contact data cache by createdBy
+         */
         clearHash(data.createdBy)
       })
-      .catch(next)
+      .catch(next) // sending error message to errhandler
   }
 
+  /**
+   *
+   * static method to read all contact data
+   * @static
+   * @param {*} req receiving req.body (user Id)
+   * @param {*} res sending res.json(array of contact data)
+   * @param {*} next
+   * @memberof ContactController
+   */
   static readAll(req, res, next) {
+    /**
+     * Destructuring req.body
+     */
     const { createdBy } = req.body
     Contact.find({ createdBy }).cache({key: createdBy})
       .then(data => {
@@ -40,7 +76,7 @@ class ContactController {
       .findOne({ _id: id })
       .then(data => {
         if(Object.keys(data).length === 0){
-          next({status: 400, message: 'Data Not Found'})
+          next({status: 404, message: messageHandler.err404message})
         }else {
           res.status(200).json(data)
         }
@@ -71,7 +107,7 @@ class ContactController {
     
     if (Object.keys(obj).length === 0) {
       
-      next({ status: 401, message: 'Nothing Change' })
+      next({ status: 403, message: messageHandler.err403message })
     } else {
       Contact
         .findOneAndUpdate({ _id: id }, obj)

@@ -1,6 +1,7 @@
 const Contact = require('../models/contact');
 const User = require('../models/user');
-const {verify} = require('../helpers/jwt')
+const {verify} = require('../helpers/jwt');
+const {messageHandler} = require('../helpers/constantType');
 
 const authorizationContact = (req, res, next) =>{
   if(req.headers.hasOwnProperty('token')){
@@ -16,12 +17,12 @@ const authorizationContact = (req, res, next) =>{
         if(String(user._id) === String(Contact.createdBy)){ 
             next()
         } else {
-            throw({status: 401, message: 'Not belong to you'})
+            throw({status: 401, message: messageHandler.err401message})
         }
     })
     .catch(next)
  }else {
-    next({status: 401, message: 'Not Authorize'})
+    next({status: 401, message: messageHandler.err401message})
  }
 }
 

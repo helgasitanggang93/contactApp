@@ -1,6 +1,7 @@
-const User = require('../models/user')
-const {compare} = require('../helpers/bcrypt')
-const {sign} = require('../helpers/jwt')
+const User = require('../models/user');
+const {compare} = require('../helpers/bcrypt');
+const {sign} = require('../helpers/jwt');
+const {messageHandler} = require('../helpers/constantType');
 
 class UserController {
   static signup(req, res ,next) {
@@ -24,7 +25,7 @@ class UserController {
     .findOne({email})
     .then(data => {
       if(!data || !compare(password, data.password)){
-        throw({status: 401, message: 'wrong email/password'})
+        throw({status: 401, message: messageHandler.err401message})
       }else{
         const {email} = data
         const token = sign({email})

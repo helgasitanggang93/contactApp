@@ -1,9 +1,11 @@
 const cloudinary = require('cloudinary').v2
-const fs = require('fs')
+const fs = require('fs');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
 const Contact = require('../models/contact')
 const {clearHash} = require('../helpers/cache');
+const {messageHandler,stringType} = require('../helpers/constantType');
+
 class ImagesController {
   
   static imageUpload(req, res, next) {
@@ -16,7 +18,7 @@ class ImagesController {
 
     // console.log(req.file)
     if (!req.file) {
-      throw { status: 400, message: 'Required Image' }
+      throw { status: 400, message:  messageHandler.err400message}
     } else {
       cloudinary.uploader.upload(req.file.path)
         .then(result => {
@@ -34,7 +36,7 @@ class ImagesController {
       let arrayOfObject = arrayOfString.map(element => {
           let eachContact = element.split(';')
           eachContact[1] = '+'+eachContact[1]
-          return new ContactData(eachContact[0], eachContact[2], 'https://res.cloudinary.com/dpnjbs730/image/upload/v1574910240/no_image_yet_fmxurx.jpg', eachContact[1], createdBy)
+          return new ContactData(eachContact[0], eachContact[2], stringType.imageDefault, eachContact[1], createdBy)
     })
     Contact.collection.insert(arrayOfObject)
     .then(() => {
@@ -48,7 +50,7 @@ class ImagesController {
     .catch(next)
 
     } catch (error) {
-      next({status: 400, message: 'Data Not Found'})
+      next({status: 400, message: messageHandler.err400message})
     }
     
   }
