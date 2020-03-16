@@ -1,6 +1,6 @@
 const { verify } = require('../helpers/jwt');
 const User = require('../models/user');
-
+const {messageHandler} = require('../helpers/constantType');
 const authenticationContact = (req, res, next) => {
   try {
     if (req.headers.hasOwnProperty('token')) {
@@ -12,15 +12,15 @@ const authenticationContact = (req, res, next) => {
             req.body.createdBy = data._id
             next()
           } else {
-            next({ status: 403, message: 'Forbidden' })
+            next({ status: 403, message: messageHandler.err403message })
           }
         })
         .catch(next)
     } else {
-      next({ status: 401, message: 'Not Authentication' })
+      next({ status: 401, message: messageHandler.err401message })
     }
   } catch (error) {
-    next({ status: 401, message: 'Not Logged In' })
+    next({ status: 401, message: messageHandler.err401message })
   }
 }
 
@@ -33,17 +33,17 @@ const authenticationCommon = (req, res, next) => {
           if (data) {
             next()
           } else {
-            next({ status: 403, message: 'Forbidden Access' })
+            next({ status: 403, message: messageHandler.err403message })
           }
         })
         .catch(next)
 
     } else {
-      next({ status: 400, message: 'Not Authentication' })
+      next({ status: 401, message: messageHandler.err401message })
     }
 
   } catch (error) {
-    next({ status: 401, message: 'Not Logged In' })
+    next({ status: 401, message: messageHandler.err401message })
   }
 }
 

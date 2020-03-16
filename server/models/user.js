@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose
 const {hash} = require('../helpers/bcrypt')
+const {messageHandler} = require('../helpers/constantType');
 
 const userSchema = new Schema({
     email: {
         type: String,
-        required: [true, 'Email must be required'],
+        required: [true, messageHandler.email.errEmailEmpty],
         validate: [{
             validator: (value) => {
                 return User.model('User', userSchema)
@@ -20,16 +21,16 @@ const userSchema = new Schema({
                     if(err) return false
                 })
             },
-            message: 'email already registered'
+            message: messageHandler.email.errEmailExist
         }, {
             validator: (value) => {
                 let regex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
                 return regex.test(value)
             },
-            message : 'Invalid format email'
+            message : messageHandler.email.errEmailFormat
         }]
     },
-    password: {type: String, required: [true, 'Password must be required']}
+    password: {type: String, required: [true, messageHandler.password]}
 })
 
 userSchema.pre('save', function (next) {
