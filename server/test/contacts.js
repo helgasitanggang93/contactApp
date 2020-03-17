@@ -279,7 +279,7 @@ describe("POST /api/Contacts, create contact Success and Fail", () => {
       .end((err, res) => {
         expect(res.status).to.equal(401);
         expect(res).to.have.property("text");
-        expect(res.body).to.equal("Not Authentication");
+        expect(res.body).to.equal("Unauthorized Access");
         done();
       });
   });
@@ -381,7 +381,7 @@ describe("GET /api/Contacts, read contact Success and Fail", () => {
       .end((err, res) => {
         expect(res.status).to.equal(401);
         expect(res).to.have.property("text");
-        expect(res.body).to.equal("Not Authentication");
+        expect(res.body).to.equal("Unauthorized Access");
         done();
       });
   });
@@ -607,9 +607,9 @@ describe("PATCH api/Contacts/:id, Update Contact Success and Fail", () => {
           "http://res.cloudinary.com/dpnjbs730/image/upload/v1580972228/j5jr4ies2qyrghnol9fe.jpg"
       })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(401);
         expect(res).to.have.property("text");
-        expect(res.body).to.equal("Not Authentication");
+        expect(res.body).to.equal("Unauthorized Access");
         done();
       });
   });
@@ -742,9 +742,9 @@ describe("DELETE /api/contacts/:id Success and Fail Test", () => {
       .request(app)
       .delete("/api/contacts/" + contactId2)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        expect(res.status).to.equal(401);
         expect(res).to.have.property("text");
-        expect(res.body).to.equal("Not Authentication");
+        expect(res.body).to.equal("Unauthorized Access");
         done();
       });
   });

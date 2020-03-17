@@ -5,15 +5,11 @@ require("./helpers/cache");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const port = process.env.PORT || 3001;
+const port = process.env.PORT_PRODUCTION || process.env.PORT_DEVELOPMENT;
 const contactRoutes = require("./routes");
 const mongoose = require("mongoose");
-let uri = `mongodb://localhost:27017/contact-app` + process.env.NODE_ENV;
-if (process.env.NODE_ENV === "production") {
-  uri = process.env.MONGODB_URI;
-}
+let uri = process.env.MONGODB_URI_PRODUCTION || process.env.MONGODB_URI_DEVELOPMENT + process.env.NODE_ENV;
 const errHandler = require("./helpers/errhandler");
-
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useUnifiedTopology", true);
 mongoose.connect(uri, function(err) {
