@@ -63,7 +63,7 @@ describe("POST api/users/login Success And Fail Test Case", () => {
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res).to.have.property("text");
-        expect(res.text).to.equal('"wrong email/password"');
+        expect(res.text).to.equal('"Unauthorized Access"');
         done();
       });
   });
@@ -76,7 +76,7 @@ describe("POST api/users/login Success And Fail Test Case", () => {
       .end((err, res) => {
         expect(res).to.have.status(401);
         expect(res).to.have.property("text");
-        expect(res.text).to.equal('"wrong email/password"');
+        expect(res.text).to.equal('"Unauthorized Access"');
         done();
       });
   });

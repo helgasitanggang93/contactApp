@@ -3,6 +3,7 @@ const User = require("../models/user");
 const { verify } = require("../helpers/jwt");
 const { messageHandler } = require("../helpers/constantType");
 
+let secret = process.env.SECRET_PRODUCTION || process.env.SECRET_DEVELOPMENT
 /**
  * this authorization implement in create contact and get all contact data
  * req {*} - receiving req.headres (token from frontEnd)
@@ -17,7 +18,7 @@ const authorizationContact = (req, res, next) => {
     /**
      * verify the token using jwt verify, if match payload will contain user information
      */
-    let payload = verify(req.headers.token, process.env.SECRET);
+    let payload = verify(req.headers.token, secret);
     /**
      * Destructuring payload
      */

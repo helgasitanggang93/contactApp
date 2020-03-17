@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const redis = require("redis");
 const util = require("util");
-let redisUrl = "redis://127.0.0.1:6379";
+let redisUrl = process.env.REDISCLOUD_URL_PRODUCTION || process.env.REDISCLOUD_URL_DEVELOPMENT
 /**
  * check if on production stage, mutate to RedisCloud url
  */
-if (process.env.NODE_ENV === "production") {
-  redisUrl = process.env.REDISCLOUD_URL;
-}
+// if (process.env.NODE_ENV === "production") {
+//   redisUrl = process.env.REDISCLOUD_URL;
+// }
 const client = redis.createClient(redisUrl, { no_ready_check: true });
 client.hget = util.promisify(client.hget); // since redis not provide promise, we should make it promise using promisify
 /**
