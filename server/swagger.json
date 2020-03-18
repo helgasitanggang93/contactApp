@@ -1,0 +1,590 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The Contact app lets a user create, read, update and delete contact tasks. A contact has a full name, phone number, address and profile picture, All contact values are validate, user also be able to upload image as a profile picture.",
+    "version": "1.0.0",
+    "title": "Swagger Contact App"
+  },
+  "host": "http://localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "contact",
+      "description": "Operation about contact"
+    },
+    {
+      "name": "user",
+      "description": "Operations about user"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/contact": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Add a new Contact to the store",
+        "description": "",
+        "operationId": "createContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Contact object from client side",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fullName": {"type":"string", "required": true},
+                "address": {"type":"string", "required": true},
+                "phoneNumber": {"type":"string", "required": true},
+                "image":{"type":"string"}
+              },
+              "example": {
+                "fullName":"john doe",
+                "address":"jl. dead valley",
+                "phoneNumber":"6285528001",
+                "image":"image url"
+              }
+            }
+          },
+          {
+            "in": "header",
+            "name": "token",
+            "description": "Token for authentication and authorization",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "token": {"type": "string"}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {"type": "string"},
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"},
+                "createdBy":{"type":"string"}
+              },
+              "example": {
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. dead valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+              }
+             
+            }
+          },
+          "400": {
+            "description": "validation failed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {"type":"string"}
+              },
+              "example":{
+                "text":"Contact Validation Failed"
+              }
+            }
+          }
+
+        }
+      },
+      "get": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Get all contact data",
+        "description": "",
+        "operationId": "findAllContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "Token for authentication and authorization",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "token": {"type": "string"}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "properties": {
+                "_id": {"type": "string"},
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"},
+                "createdBy":{"type":"string"}
+              },
+              "example": {
+               "data1": {
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. dead valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+              },
+              "data2":{
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. dead valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+
+              }
+              }
+             
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {"type":"string"}
+              },
+              "example":{
+                "text":"Unauthorized Access"
+              }
+            }
+          }
+
+        }
+      }
+    },
+    "/contact/contactId": {
+      "get": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Get one contact data",
+        "description": "",
+        "operationId": "findOneContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "Token for authentication and authorization",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "token": {"type": "string"}
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "id for to get each contact data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "id": {"type": "string"}
+              },
+              "example":{
+                "text":"5e425e53fb5460424360925f"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {"type": "string"},
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"},
+                "createdBy":{"type":"string"}
+              },
+              "example": {
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. dead valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+              }
+             
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {"type":"string"}
+              },
+              "example":{
+                "text":"Unauthorized Access"
+              }
+            }
+          }
+
+        }
+      },
+      "patch": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "update one contact data",
+        "description": "",
+        "operationId": "findOneContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "Token for authentication and authorization",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "token": {"type": "string"}
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "id for to get each contact data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "id": {"type": "string"}
+              },
+              "example":{
+                "text":"5e425e53fb5460424360925f"
+              }
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Contact object from client side",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"}
+              },
+              "example": {
+                "fullName":"john doe",
+                "address":"jl. life valley",
+                "phoneNumber":"6285528001",
+                "image":"image url"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {"type": "string"},
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"},
+                "createdBy":{"type":"string"}
+              },
+              "example": {
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. life valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+              }
+             
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {"type":"string"}
+              },
+              "example":{
+                "text":"Unauthorized Access"
+              }
+            }
+          }
+
+        }
+      },
+      "delete": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "update one contact data",
+        "description": "",
+        "operationId": "findOneContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "Token for authentication and authorization",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "token": {"type": "string"}
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "id for to get each contact data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties":{
+                "id": {"type": "string"}
+              },
+              "example":{
+                "text":"5e425e53fb5460424360925f"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {"type": "string"},
+                "fullName": {"type":"string"},
+                "address": {"type":"string"},
+                "phoneNumber": {"type":"string"},
+                "image":{"type":"string"},
+                "createdBy":{"type":"string"}
+              },
+              "example": {
+                "_id":"5e425e53fb5460424360925f",
+                "fullName":"john doe",
+                "address":"jl. life valley",
+                "phoneNumber":"6285528001",
+                "image":"image url",
+                "createdBy":"5e4a086e1347651da8dedce1"
+              }
+             
+            }
+          },
+          "401": {
+            "description": "Unauthorized Access",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {"type":"string"}
+              },
+              "example":{
+                "text":"Unauthorized Access"
+              }
+            }
+          }
+
+        }
+      }
+    },
+    "users/signup": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "Create data for new user",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "users/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "User login",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "Contact": {
+      "type": "object",
+      "required": [
+        "fullName",
+        "address",
+        "phoneNumber"
+      ],
+      "properties": {
+        "_id": {
+          "string": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
