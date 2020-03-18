@@ -25,7 +25,9 @@ mongoose.connect(uri, function(err) {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
-app.use("/api", contactRoutes);
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+app.use("/api", contactRoutes, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((err, req, res, next) => {
   const errorDetail = errHandler(err);
   res.status(errorDetail.status).json(errorDetail.message);
